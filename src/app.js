@@ -20,6 +20,10 @@ function checkId(request, response, next) {
   return next();
 }
 
+function getRepoIndex(id) {
+  return repositories.findIndex(repo => repo.id === id);
+}
+
 app.use('/repositories/:id', checkId);
 
 app.get("/repositories", (request, response) => {
@@ -54,7 +58,7 @@ app.put("/repositories/:id", (request, response) => {
     return response.status(400).json({ error: "Check all the informations at the request's body" });
   }
 
-  const repoIndex = repositories.findIndex(repo => repo.id === id);
+  const repoIndex = getRepoIndex(id);
 
   if (repoIndex < 0) {
     return response.status(400).json({ error: 'Repository not found' });
@@ -75,7 +79,7 @@ app.put("/repositories/:id", (request, response) => {
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
 
-  const repoIndex = repositories.findIndex(repo => repo.id === id);
+  const repoIndex = getRepoIndex(id);
 
   if (repoIndex < 0) {
     return response.status(400).json({ error: 'Repository not found' });
@@ -89,7 +93,7 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
 
-  const repoIndex = repositories.findIndex(repo => repo.id === id);
+  const repoIndex = getRepoIndex(id);
 
   if (repoIndex < 0) {
     return response.status(400).json({ error: 'Repository not found' });
